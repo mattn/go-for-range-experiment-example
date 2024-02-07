@@ -32,7 +32,9 @@ func ScanRows(rows *sql.Rows) func(func(tv []any) bool) {
 			}
 			ret := make([]any, len(values))
 			for i, v := range values {
-				ret[i], _ = v.(driver.Valuer).Value()
+				if vv, err := v.(driver.Valuer).Value(); err == nil {
+					ret[i] = vv
+				}
 			}
 			if !yield(ret) {
 				return
@@ -48,7 +50,7 @@ func main() {
 	}
 	defer db.Close()
 
-	_, err = db.Exec(`CREATE TABLE user(id integer primary key autoincrement, name text, age integer not null)`)
+	_, err = db.Exec(`CREATE TABLE user(id integer primary key autoincrement, name text, age integer, type integer not null)`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +59,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = db.Exec(`INSERT INTO user(name, age) values('John', 20), ('Mike', 25), ('Bob', 32)`)
+	_, err = db.Exec(`INSERT INTO user(name, age, type) values('John', 20, 0), ('Mike', 25, 1), ('Bob', null, 1)`)
 	if err != nil {
 		log.Fatal(err)
 	}
