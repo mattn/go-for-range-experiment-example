@@ -1,6 +1,6 @@
 module github.com/mattn/go-for-range-experiment-example/nostr
 
-go 1.22
+go 1.23
 
 require github.com/nbd-wtf/go-nostr v0.28.3
 

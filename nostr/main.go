@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"iter"
 	"log"
 
 	"github.com/nbd-wtf/go-nostr"
 )
 
-func relayFunc(url string) func(yield func(ev *nostr.Event) bool) {
+func relayFunc(url string) iter.Seq[*nostr.Event] {
 	return func(yield func(ev *nostr.Event) bool) {
 		ctx := context.Background()
 		relay, err := nostr.RelayConnect(ctx, url)
