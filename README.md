@@ -4,8 +4,14 @@ Example code for Go generics.
 
 ## Usage
 
+for go1.22
 ```
 $ GOEXPERIMENT=rangefunc go build
+```
+
+for go1.13
+```
+$ go build
 ```
 
 ## Requirements
