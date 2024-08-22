@@ -9,7 +9,7 @@ for go1.22
 $ GOEXPERIMENT=rangefunc go build
 ```
 
-for go1.13
+for go1.23
 ```
 $ go build
 ```
