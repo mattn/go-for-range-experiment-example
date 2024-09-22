@@ -28,12 +28,31 @@ func merge[T any](seqs ...iter.Seq[T]) iter.Seq[T] {
 	}
 }
 
-func main() {
-	a1 := []int{1, 4, 7}
-	a2 := []int{2, 5, 8, 10}
-	a3 := []int{3, 6, 9}
+func ofChan[T any](c <-chan T) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for v := range c {
+			if !yield(v) {
+				return
+			}
+		}
+	}
+}
 
-	for v := range merge(slices.Values(a1), slices.Values(a2), slices.Values(a3)) {
+func main() {
+	a1 := []int{1, 5, 9}
+	a2 := []int{2, 6, 10, 13}
+	a3 := []int{3, 7, 11}
+	a4 := make(chan int)
+
+	go func() {
+		defer close(a4)
+		a4 <- 4
+		a4 <- 8
+		a4 <- 12
+		a4 <- 14
+	}()
+
+	for v := range merge(slices.Values(a1), slices.Values(a2), slices.Values(a3), ofChan(a4)) {
 		fmt.Println(v)
 	}
 }
